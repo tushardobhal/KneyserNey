@@ -1,4 +1,4 @@
-package edu.berkeley.nlp.assignments.assign1.student.model;
+/*package edu.berkeley.nlp.assignments.assign1.student.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,8 +60,8 @@ public class BigramLanguageModel implements NgramLanguageModel {
 		} else if(to - from == 2) {
 			long bigramKey = LanguageModelUtils.getIndexesToLong(Arrays.copyOfRange(ngram, from, to));
 			long unigramKey = LanguageModelUtils.getIndexesToLong(Arrays.copyOfRange(ngram, from, to-1));
-			return (Math.max(0, bigramMap.get(bigramKey) - LanguageModelUtils.DISCOUNT_FACTOR)/totalCount) 
-					+ ((LanguageModelUtils.DISCOUNT_FACTOR/totalCount) * unigramFertilityMap.get(unigramKey) 
+			return (Math.max(0, bigramMap.get(bigramKey) - LanguageModelUtils.DISCOUNT_FACTOR)/unigramLanguageModel.getTotalCount()) 
+					+ ((LanguageModelUtils.DISCOUNT_FACTOR/unigramLanguageModel.getTotalCount()) * unigramFertilityMap.get(unigramKey) 
 							* unigramLanguageModel.getNgramLogProbability(ngram, from, to-1));
 		} else {
 			return unigramLanguageModel.getNgramLogProbability(ngram, from, to);
@@ -78,4 +78,9 @@ public class BigramLanguageModel implements NgramLanguageModel {
 			return unigramLanguageModel.getCount(ngram);
 	}
 
+	public int getTotalCount() {
+		return totalCount;
+	}
+
 }
+*/

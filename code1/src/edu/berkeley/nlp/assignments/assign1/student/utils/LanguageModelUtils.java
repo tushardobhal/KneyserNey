@@ -8,12 +8,13 @@ public class LanguageModelUtils {
 	public final static int INIT_CAPACITY = 10;
 	public final static String UNK = "<unk>";
 	public final static double DISCOUNT_FACTOR = 0.65;
+	public final static double EPSILON = 0.000001;
 	
 	private final static int BIT_LENGTH = 20;
 	private final static long MAX_VAL = (1 << BIT_LENGTH) - 1;
 	private final static int BASE = 2;
 	
-	public static long getIndexesToLong(int[] index) {
+	public static long getIndexesToLong(int... index) {
 		long key = 0;
 		for(int i=0; i<index.length; i++) {
 			key = key | ((((long) index[i]) & MAX_VAL) << BIT_LENGTH*i);
@@ -44,6 +45,10 @@ public class LanguageModelUtils {
 			indexedArr[i] = EnglishWordIndexer.getIndexer().addAndGetIndex(arr[i]);
 		}
 		return indexedArr;
+	}
+	
+	public static int index(String str) {
+		return EnglishWordIndexer.getIndexer().addAndGetIndex(str);
 	}
 	
 }

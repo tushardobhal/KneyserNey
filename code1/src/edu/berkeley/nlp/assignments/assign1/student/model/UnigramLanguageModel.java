@@ -1,4 +1,4 @@
-package edu.berkeley.nlp.assignments.assign1.student.model;
+/*package edu.berkeley.nlp.assignments.assign1.student.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +46,7 @@ public class UnigramLanguageModel implements NgramLanguageModel {
 			return 0.0;
 		} else {
 			long unigramKey = LanguageModelUtils.getIndexesToLong(Arrays.copyOfRange(ngram, from, to));
-			return unigramMap.get(unigramKey)/totalCount;
+			return (unigramMap.get(unigramKey)/totalCount);
 		}
 	}
 
@@ -57,5 +57,10 @@ public class UnigramLanguageModel implements NgramLanguageModel {
 		else 
 			return unigramMap.get(LanguageModelUtils.getIndexesToLong(ngram));
 	}
+
+	public int getTotalCount() {
+		return totalCount;
+	}
 	
 }
+*/
