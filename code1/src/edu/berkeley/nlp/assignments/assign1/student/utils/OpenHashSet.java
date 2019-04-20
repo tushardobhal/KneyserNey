@@ -10,38 +10,34 @@ import java.util.Arrays;
  * @author adampauls
  * 
  */
-public class OpenHashMap
+public class OpenHashSet
 {
 
 	private long[] keys;
-
-	private int[] values;
 
 	private int size = 0;
 
 	private final double MAX_LOAD_FACTOR;
 
-	public boolean put(long k, int v) {
+	public boolean add(long k) {
 		if (size / (double) keys.length > MAX_LOAD_FACTOR) {
 			rehash();
 		}
-		return putHelp(k, v, keys, values);
+		return putHelp(k, keys);
 
 	}
 
-	public OpenHashMap() {
+	public OpenHashSet() {
 		this(10);
 	}
 
-	public OpenHashMap(int initialCapacity_) {
+	public OpenHashSet(int initialCapacity_) {
 		this(initialCapacity_, 0.7);
 	}
 
-	public OpenHashMap(int initialCapacity_, double loadFactor) {
+	public OpenHashSet(int initialCapacity_, double loadFactor) {
 		int cap = Math.max(5, (int) (initialCapacity_ / loadFactor));
 		MAX_LOAD_FACTOR = loadFactor;
-		values = new int[cap];
-		Arrays.fill(values, -1);
 		keys = new long[cap];
 		Arrays.fill(keys, -1);
 	}
@@ -51,26 +47,22 @@ public class OpenHashMap
 	 */
 	private void rehash() {
 		long[] newKeys = new long[keys.length * 3 / 2];
-		int[] newValues = new int[values.length * 3 / 2];
-		Arrays.fill(newValues, -1);
 		Arrays.fill(newKeys, -1);
 		size = 0;
 		for (int i = 0; i < keys.length; ++i) {
 			long curr = keys[i];
 			if (curr != -1) {
-				int val = values[i];
-				putHelp(curr, val, newKeys, newValues);
+				putHelp(curr, newKeys);
 			}
 		}
 		keys = newKeys;
-		values = newValues;
 	}
 
 	/**
 	 * @param k
 	 * @param v
 	 */
-	private boolean putHelp(long k, int v, long[] keyArray, int[] valueArray) {
+	private boolean putHelp(long k, long[] keyArray) {
 		int pos = getInitialPos(k, keyArray);
 		long curr = keyArray[pos];
 		while (curr != -1 && curr != k) {
@@ -79,7 +71,6 @@ public class OpenHashMap
 			curr = keyArray[pos];
 		}
 
-		valueArray[pos] = v;
 		if (curr == -1) {
 			size++;
 			keyArray[pos] = k;
@@ -105,17 +96,17 @@ public class OpenHashMap
 		return pos;
 	}
 
-	public int get(long k) {
-		int pos = find(k);
+	public boolean contains(long k) {
+		long curr = find(k);
 
-		return values[pos];
+		return (curr == k);
 	}
 
 	/**
 	 * @param k
 	 * @return
 	 */
-	private int find(long k) {
+	private long find(long k) {
 		int pos = getInitialPos(k, keys);
 		long curr = keys[pos];
 		while (curr != -1 && curr != k) {
@@ -123,29 +114,12 @@ public class OpenHashMap
 			if (pos == keys.length) pos = 0;
 			curr = keys[pos];
 		}
-		return pos;
-	}
-
-	public int increment(long k, int c) {
-		int pos = find(k);
-		long currKey = keys[pos];
-		if (currKey == -1) {
-			put(k, c);
-		} else
-			values[pos]++;
-		return values[pos];
+		return curr;
 	}
 
 	public int size() {
 		return size;
 	}
-	
-	public long[] getKeys() {
-		return keys;
-	}
-	
-	public int[] getValues() {
-		return values;
-	}
 
 }
+

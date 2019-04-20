@@ -16,6 +16,9 @@ public class LanguageModelUtils {
 	
 	public static long getIndexesToLong(int... index) {
 		long key = 0;
+		if(index.length == 1)
+			return (long) index[0];
+		
 		for(int i=0; i<index.length; i++) {
 			key = key | ((((long) index[i]) & MAX_VAL) << BIT_LENGTH*i);
 		}
