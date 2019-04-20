@@ -68,9 +68,9 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 				}
 			}
 		}
-		System.out.println("unigramMap - " + unigramMap.size() + " bigramMap - " + bigramMap.size()
-				+ " preBigram - " + preBigramFertilityMap.size() + " postBigram - " + postBigramFertilityMap.size()
-				+ " prePost - " + prePostUnigramFertilityMap.size());
+		System.out.println("unigramMap - " + unigramMap.size() + ", bigramMap - " + bigramMap.size()
+				+ ", preBigram - " + preBigramFertilityMap.size() + ", postBigram - " + postBigramFertilityMap.size()
+				+ ", prePost - " + prePostUnigramFertilityMap.size() + ", trigramMap - " + trigramMap.size());
 		System.out.println("Done building TrigramLanguageModel . . .");
 	}
 		
@@ -95,8 +95,11 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 							Math.max(1, prePostUnigramFertilityMap.get(LanguageModelUtils.getIndexesToLong(ngram[from+2])))
 						  )
 					);
-		} else if(to - from == 3) {
-			return 0.0;
+		} else if(to - from == 2) {
+			return Math.log(
+						Math.max(1, preBigramFertilityMap.get(LanguageModelUtils.getIndexesToLong(ngram[from], ngram[from+1]))) / 
+						Math.max(1, prePostUnigramFertilityMap.get(LanguageModelUtils.getIndexesToLong(ngram[from])))
+					);
 		} else {
 			return Math.log(unigramMap.get(LanguageModelUtils.getIndexesToLong(ngram))/(totalCount+2));
 		}
