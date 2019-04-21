@@ -139,13 +139,5 @@ public class OpenHashMap
 	public int size() {
 		return size;
 	}
-	
-	public long[] getKeys() {
-		return keys;
-	}
-	
-	public int[] getValues() {
-		return values;
-	}
 
 }
