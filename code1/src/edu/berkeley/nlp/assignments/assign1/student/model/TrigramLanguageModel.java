@@ -152,22 +152,24 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 				int bigramIndex = bigramIndexer.indexOf(bigramKey);
 				int totalCount = 1;
 				int preBigramIndex = bigramIndexer.indexOf(LanguageModelUtils.getIndexesToLong(ngram[from+1], ngram[from+2]));
-				double postBigramFertility = LanguageModelUtils.EPSILON;
-				double trigram = 0.0;
+				double postBigramFertility = 0.0;
 				if(bigramIndex != -1) {
-					trigram = trigramMap.get(trigramKey) - LanguageModelUtils.DISCOUNT_FACTOR;
 					totalCount = Math.max(1, bigramMap[bigramIndex]);
-					postBigramFertility = Math.max(LanguageModelUtils.EPSILON, postBigramFertilityMap[bigramIndex]);
+					postBigramFertility = postBigramFertilityMap[bigramIndex];
 				}
-				double preBigramFertility = LanguageModelUtils.EPSILON;
+				double preBigramFertility = 0.0;
 				if(preBigramIndex != -1)
-					preBigramFertility = Math.max(LanguageModelUtils.EPSILON, preBigramFertilityMap[preBigramIndex]);
-				double triNumerator1 = Math.max(0.0, trigram)/totalCount;
-				double triNumerator2 = (LanguageModelUtils.DISCOUNT_FACTOR/(totalCount)) * 
-						postBigramFertility * preBigramFertility / 
-						Math.max(1, prePostUnigramFertilityMap[ngram[from+1]]);
-				double probability =  Math.log(triNumerator1 + triNumerator2);
-				
+					preBigramFertility = preBigramFertilityMap[preBigramIndex];
+				double probability =  Math.log(  
+						(Math.max(0.0, trigramMap.get(trigramKey) - 
+								LanguageModelUtils.DISCOUNT_FACTOR)/totalCount)
+						+ (
+							(LanguageModelUtils.DISCOUNT_FACTOR/(totalCount)) * 
+							Math.max(LanguageModelUtils.EPSILON, postBigramFertility) * 
+							Math.max(LanguageModelUtils.EPSILON, preBigramFertility) / 
+							Math.max(1, prePostUnigramFertilityMap[ngram[from+1]])
+						  )
+					);
 				cacheMap.put(trigramKey, probability);
 				return probability;
 			} else {
@@ -179,11 +181,12 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 			double currProbability = cacheMap.get(bigramKey);
 			if(currProbability == -1.0) {
 				int bigramIndex = bigramIndexer.indexOf(bigramKey);
-				double preBigramFertility = LanguageModelUtils.EPSILON;
+				double preBigramFertility = 0.0;
 				if(bigramIndex != -1)
-					preBigramFertility = Math.max(LanguageModelUtils.EPSILON, preBigramFertilityMap[bigramIndex]);
+					preBigramFertility = preBigramFertilityMap[bigramIndex];
 				double probability = Math.log(
-						preBigramFertility / Math.max(1, prePostUnigramFertilityMap[ngram[from]])
+						Math.max(LanguageModelUtils.EPSILON, preBigramFertility) / 
+						Math.max(1, prePostUnigramFertilityMap[ngram[from]])
 					);
 				cacheMap.put(bigramKey, probability);
 				return probability;
@@ -202,9 +205,9 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 
 		long count = 0;
 		if(ngram.length == 3)
-			count = trigramMap.get(LanguageModelUtils.getIndexesToLong(ngram[0], ngram[1], ngram[2]));
+			count = trigramMap.get(LanguageModelUtils.getIndexesToLong(ngram));
 		else if(ngram.length == 2) 
-			count = bigramMap[bigramIndexer.indexOf(LanguageModelUtils.getIndexesToLong(ngram[0], ngram[1]))];
+			count = bigramMap[bigramIndexer.indexOf(LanguageModelUtils.getIndexesToLong(ngram))];
 		else
 			count = unigramMap[ngram[0]];
 		
