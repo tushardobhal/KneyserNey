@@ -14,7 +14,6 @@ public class LanguageModelUtils {
 	public final static double EPSILON = 0.000001;
 	
 	private final static int BIT_LENGTH = 20;
-	private final static long MAX_VAL = (1 << BIT_LENGTH) - 1;
 	private final static int BASE = 2;
 	
 	public static long getIndexesToLong(int... index) {
@@ -23,7 +22,7 @@ public class LanguageModelUtils {
 			return (long) index[0];
 		
 		for(int i=0; i<index.length; i++) {
-			key = key | ((((long) index[i]) & MAX_VAL) << BIT_LENGTH*i);
+			key = key | (((long) index[i]) << BIT_LENGTH*i);
 		}
 		return key;
 	}

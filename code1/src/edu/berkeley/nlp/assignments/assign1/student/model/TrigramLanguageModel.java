@@ -153,7 +153,7 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 				int totalCount = 1;
 				int preBigramIndex = bigramIndexer.indexOf(LanguageModelUtils.getIndexesToLong(ngram[from+1], ngram[from+2]));
 				double postBigramFertility = 0.0;
-				double trigram = 0;
+				double trigram = 0.0;
 				if(bigramIndex != -1) {
 					trigram = trigramMap.get(trigramKey) - LanguageModelUtils.DISCOUNT_FACTOR;
 					totalCount = Math.max(1, bigramMap[bigramIndex]);
@@ -204,9 +204,9 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 
 		long count = 0;
 		if(ngram.length == 3)
-			count = trigramMap.get(LanguageModelUtils.getIndexesToLong(ngram));
+			count = trigramMap.get(LanguageModelUtils.getIndexesToLong(ngram[0], ngram[1], ngram[2]));
 		else if(ngram.length == 2) 
-			count = bigramMap[bigramIndexer.indexOf(LanguageModelUtils.getIndexesToLong(ngram))];
+			count = bigramMap[bigramIndexer.indexOf(LanguageModelUtils.getIndexesToLong(ngram[0], ngram[1]))];
 		else
 			count = unigramMap[ngram[0]];
 		

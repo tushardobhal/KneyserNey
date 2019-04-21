@@ -16,6 +16,8 @@ public class DirectHashMap
 	private long[] keys;
 
 	private double[] values;
+	
+	private static final long NULL_KEY = -1;
 
 	private int size = 0;
 
@@ -33,7 +35,7 @@ public class DirectHashMap
 		values = new double[cap];
 		Arrays.fill(values, -1.0);
 		keys = new long[cap];
-		Arrays.fill(keys, -1);
+		Arrays.fill(keys, NULL_KEY);
 	}
 	
 	public void put(long k, double v) {
@@ -75,7 +77,7 @@ public class DirectHashMap
 	private double find(long k) {
 		int pos = getInitialPos(k, keys);
 		long curr = keys[pos];
-		if (curr != -1 && curr == k) {
+		if (curr != NULL_KEY && curr == k) {
 			return values[pos];
 		}
 		return -1.0;
