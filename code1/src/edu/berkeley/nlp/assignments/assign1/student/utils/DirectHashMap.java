@@ -26,11 +26,7 @@ public class DirectHashMap
 	}
 
 	public DirectHashMap(int initialCapacity_) {
-		this(initialCapacity_, 0.7);
-	}
-
-	public DirectHashMap(int initialCapacity_, double loadFactor) {
-		int cap = Math.max(5, (int) (initialCapacity_ / loadFactor));
+		int cap = Math.max(5, initialCapacity_);
 		size = cap;
 		values = new double[cap];
 		Arrays.fill(values, -1.0);
