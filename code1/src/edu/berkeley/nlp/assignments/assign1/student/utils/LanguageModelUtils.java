@@ -7,10 +7,10 @@ public class LanguageModelUtils {
 	
 	public final static double LOAD_FACTOR = 0.65;
 	public final static int UNIGRAM_INIT_CAPACITY = 260_000;
-	public final static int BIGRAM_INIT_CAPACITY = 8_200_000;
-	public final static int TRIGRAM_INIT_CAPACITY = 42_000_000;
+	public final static int BIGRAM_INIT_CAPACITY = 8_000_000;
+	public final static int TRIGRAM_INIT_CAPACITY = 41_300_000;
 	
-	public final static double DISCOUNT_FACTOR = 0.65;
+	public final static double DISCOUNT_FACTOR = 0.75;
 	public final static double EPSILON = 0.000001;
 	
 	private final static int BIT_LENGTH = 20;
