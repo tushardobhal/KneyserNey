@@ -13,35 +13,14 @@ public class LanguageModelUtils {
 	public final static double DISCOUNT_FACTOR = 0.75;
 	public final static double EPSILON = 0.000001;
 	
-	private final static int BIT_LENGTH = 20;
-	private final static int BASE = 2;
-	
-	public static long getIndexesToLong(int... index) {
-		long key = 0;
-		if(index.length == 1)
-			return (long) index[0];
-		
-		for(int i=0; i<index.length; i++) {
-			key = key | (((long) index[i]) << BIT_LENGTH*i);
-		}
+	public static long getIndexesToLong(long index1, long index2, long index3) {
+		long key = ((index1 << 20 | index2) << 20 | index3) << 4;
 		return key;
 	}
 	
-	public static int[] getLongToIndexes(long value) {
-		String binary = Long.toBinaryString(value);
-		int indexesLength = (binary.length() / BIT_LENGTH) + 1;
-		int[] indexes = new int[indexesLength];
-		
-		for(int i=0; i<indexesLength; i++) {
-			if(i != indexesLength - 1) {
-				String subBinary = binary.substring(binary.length()-BIT_LENGTH*(i + 1), binary.length()-BIT_LENGTH*i);
-				indexes[indexesLength-i-1] = Integer.valueOf(subBinary, BASE);
-			} else {
-				String subBinary = binary.substring(0, binary.length()-BIT_LENGTH*i);
-				indexes[indexesLength-i-1] = Integer.valueOf(subBinary, BASE);
-			}
-		}
-		return indexes;
+	public static long getIndexesToLong(long index1, long index2) {
+		long key = (index1 << 20 | index2) << 24;
+		return key;
 	}
 	
 	public static int[] index(String... arr) {

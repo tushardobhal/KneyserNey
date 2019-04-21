@@ -36,13 +36,23 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 	public TrigramLanguageModel(Iterable<List<String>> trainingData) {
 		System.out.println("Building TrigramLanguageModel at time " + df.format(LocalDateTime.now()));
 		
-		unigramMap = new int[LanguageModelUtils.UNIGRAM_INIT_CAPACITY];
-		bigramMap = new int[LanguageModelUtils.BIGRAM_INIT_CAPACITY];
-		trigramMap = new OpenHashMap(LanguageModelUtils.TRIGRAM_INIT_CAPACITY, LanguageModelUtils.LOAD_FACTOR);
-		bigramIndexer = new BigramTokenIndexer(LanguageModelUtils.BIGRAM_INIT_CAPACITY, LanguageModelUtils.LOAD_FACTOR);
-		preBigramFertilityMap = new int[LanguageModelUtils.BIGRAM_INIT_CAPACITY];
-		postBigramFertilityMap = new int[LanguageModelUtils.BIGRAM_INIT_CAPACITY];
-		prePostUnigramFertilityMap = new int[LanguageModelUtils.UNIGRAM_INIT_CAPACITY];
+		if(Runtime.getRuntime().maxMemory() > 1_000_000_000) {
+			unigramMap = new int[LanguageModelUtils.UNIGRAM_INIT_CAPACITY];
+			bigramMap = new int[LanguageModelUtils.BIGRAM_INIT_CAPACITY];
+			trigramMap = new OpenHashMap(LanguageModelUtils.TRIGRAM_INIT_CAPACITY, LanguageModelUtils.LOAD_FACTOR);
+			bigramIndexer = new BigramTokenIndexer(LanguageModelUtils.BIGRAM_INIT_CAPACITY, LanguageModelUtils.LOAD_FACTOR);
+			preBigramFertilityMap = new int[LanguageModelUtils.BIGRAM_INIT_CAPACITY];
+			postBigramFertilityMap = new int[LanguageModelUtils.BIGRAM_INIT_CAPACITY];
+			prePostUnigramFertilityMap = new int[LanguageModelUtils.UNIGRAM_INIT_CAPACITY];
+		} else {
+			unigramMap = new int[1800];
+			bigramMap = new int[13000];
+			trigramMap = new OpenHashMap(22500);
+			bigramIndexer = new BigramTokenIndexer(13000);
+			preBigramFertilityMap = new int[13000];
+			postBigramFertilityMap = new int[13000];
+			prePostUnigramFertilityMap = new int[1800];
+		}
 		
 		preprocessTokens(trainingData);
 		
@@ -206,9 +216,9 @@ public class TrigramLanguageModel implements NgramLanguageModel {
 
 		long count = 0;
 		if(ngram.length == 3)
-			count = trigramMap.get(LanguageModelUtils.getIndexesToLong(ngram));
+			count = trigramMap.get(LanguageModelUtils.getIndexesToLong(ngram[0], ngram[1], ngram[2]));
 		else if(ngram.length == 2) 
-			count = bigramMap[bigramIndexer.indexOf(LanguageModelUtils.getIndexesToLong(ngram))];
+			count = bigramMap[bigramIndexer.indexOf(LanguageModelUtils.getIndexesToLong(ngram[0], ngram[1]))];
 		else
 			count = unigramMap[ngram[0]];
 		
